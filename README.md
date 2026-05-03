@@ -12,7 +12,7 @@ The idea is simple: instead of patrolling alone, patrollers can flag a revision 
 
 ## Installation
 
-1. Download and place the `CollabPatrol` folder in your `extensions/` directory.
+1. Download and place the `CollabPatrol` folder in your `extensions/` directory (see the releases page).
 2. Add the following line to your `LocalSettings.php`:
    ```php
    wfLoadExtension( 'CollabPatrol' );

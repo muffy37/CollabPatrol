@@ -53,6 +53,18 @@
 				$chatPanel.hide();
 			}
 		} );
+
+		var existingRevId = CP.getRevId();
+		if ( existingRevId ) {
+			CP.api.getEntry( existingRevId ).then( function ( entry ) {
+				if ( entry && entry.status !== 'finished' ) {
+					currentRevId = existingRevId;
+					attachPanel();
+					loadMessages();
+					startRefresh();
+				}
+			} );
+		}
 	}
 
 	function attachPanel() {

@@ -158,14 +158,30 @@
 				"collabpatrol-btn-take",
 				"collabpatrol-btn-finish",
 				"collabpatrol-btn-cancel",
+				"collabpatrol-confirm-remove",
+				"collabpatrol-notify-patrolled",
+				"collabpatrol-comment-placeholder",
 				"collabpatrol-time-now",
 				"collabpatrol-time-minutes",
 				"collabpatrol-time-hours",
-				"collabpatrol-time-days"
+				"collabpatrol-time-days",
+				"collabpatrol-chat-title",
+				"collabpatrol-chat-placeholder",
+				"collabpatrol-chat-btn-send",
+				"collabpatrol-chat-btn-delete",
+				"collabpatrol-chat-deleted",
+				"collabpatrol-chat-empty",
+				"collabpatrol-chat-too-long",
+				"collabpatrol-chat-send-error",
+				"collabpatrol-chat-confirm-delete",
+				"collabpatrol-chat-toggle-open",
+				"collabpatrol-chat-toggle-close",
+				"collabpatrol-chat-count"
 			],
 			"dependencies": [
 				"ext.collabPatrol",
-				"mediawiki.api"
+				"mediawiki.api",
+				"mediawiki.util"
 			],
 			"skinStyles": {
 				"minerva": [

@@ -4,12 +4,33 @@
 	window.CollabPatrol = window.CollabPatrol || {};
 
 	var CP = window.CollabPatrol;
+	var userOptions = mw.user && mw.user.options ? mw.user.options : null;
+
+	function getUserOption( key, fallback ) {
+		if ( !userOptions || typeof userOptions.get !== 'function' ) {
+			return fallback;
+		}
+		var value = userOptions.get( key );
+		return value === undefined || value === null ? fallback : value;
+	}
+
+	function parseRefreshInterval() {
+		var value = parseInt( getUserOption( 'collabpatrol-refresh-interval', 30 ), 10 );
+		if ( [ 0, 10, 20, 30, 60 ].indexOf( value ) === -1 ) {
+			value = 30;
+		}
+		return value * 1000;
+	}
 
 	CP.config = {
 		urgencyThreshold: ( mw.config.get( 'wgCollabPatrolUrgencyThreshold' ) || 3600 ) * 1000,
 		isAdmin: !!mw.config.get( 'wgCollabPatrolIsAdmin' ),
 		autoPatrol: !!mw.config.get( 'wgCollabPatrolAutoPatrol' ),
-		refreshInterval: 30000,
+		refreshInterval: parseRefreshInterval(),
+		notifyFinished: !!parseInt( getUserOption( 'collabpatrol-notify-finished', 1 ), 10 ),
+		chatOpenDefault: !!parseInt( getUserOption( 'collabpatrol-chat-open-default', 0 ), 10 ),
+		showHistory: !!parseInt( getUserOption( 'collabpatrol-show-history', 1 ), 10 ),
+		compactMode: !!parseInt( getUserOption( 'collabpatrol-compact-mode', 0 ), 10 ),
 		commentTemplates: [
 			mw.msg( 'collabpatrol-template-verify' ),
 			mw.msg( 'collabpatrol-template-doubt' ),

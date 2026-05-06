@@ -111,6 +111,8 @@
 		updateRC();
 	} );
 
-	setInterval( updateRC, CP.config.refreshInterval );
+	if ( CP.config.refreshInterval > 0 ) {
+		setInterval( updateRC, CP.config.refreshInterval );
+	}
 
 }() );

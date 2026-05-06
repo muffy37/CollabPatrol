@@ -117,6 +117,27 @@
 			} ).then( function ( data ) {
 				return data.collabpatrol;
 			} );
+		},
+
+		chatBan: function ( userText, reason ) {
+			return api.postWithToken( 'csrf', {
+				action: 'collabpatrol',
+				subaction: 'chat_ban',
+				user: userText,
+				reason: reason || ''
+			} ).then( function ( data ) {
+				return data.collabpatrol;
+			} );
+		},
+
+		chatUnban: function ( userText ) {
+			return api.postWithToken( 'csrf', {
+				action: 'collabpatrol',
+				subaction: 'chat_unban',
+				user: userText
+			} ).then( function ( data ) {
+				return data.collabpatrol;
+			} );
 		}
 	};
 

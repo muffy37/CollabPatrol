@@ -10,6 +10,8 @@
 	var MAX_LEN = mw.config.get( 'wgCollabPatrolChatMaxLength' ) || 500;
 	var chatRevId = null;
 	var isMod = false;
+	var isChatBanned = false;
+	var bannedUsers = {};
 	var isOpen = false;
 	var refreshTimer = null;
 	var $chatPanel = null;
@@ -42,14 +44,19 @@
 
 		$chatPanel.append( $header, $body );
 
+		toggleChat( CP.config.chatOpenDefault );
 		loadMessages( revId );
 		startRefresh( revId );
 
 		return $chatPanel;
 	}
 
-	function toggleChat() {
-		isOpen = !isOpen;
+	function toggleChat( openState ) {
+		if ( typeof openState === 'boolean' ) {
+			isOpen = openState;
+		} else {
+			isOpen = !isOpen;
+		}
 		var $body = $chatPanel.find( '.collabpatrol-m-chat-body' );
 		var $toggle = $chatPanel.find( '.collabpatrol-m-chat-toggle' );
 		if ( isOpen ) {
@@ -72,6 +79,10 @@
 			.attr( 'rows', 2 );
 
 		var $counter = $( '<span>' ).addClass( 'collabpatrol-m-chat-counter' ).text( '0/' + MAX_LEN );
+		var $error = $( '<div>' ).addClass( 'collabpatrol-m-chat-error' ).hide();
+		$composer.data( 'cp-input', $input );
+		$composer.data( 'cp-send', null );
+		$composer.data( 'cp-error', $error );
 
 		var $btn = createBtn( mw.msg( 'collabpatrol-chat-btn-send' ), 'green', function () {
 			var msg = $input.val().trim();
@@ -85,10 +96,15 @@
 					$counter.text( '0/' + MAX_LEN );
 					loadMessages( revId );
 				}
+			} ).catch( function ( code, data ) {
+				if ( data && data.error && data.error.code === 'chat_user_banned' ) {
+					showError( $error, mw.msg( 'collabpatrol-chat-user-banned' ) );
+				}
 			} ).always( function () {
 				$btn.prop( 'disabled', false );
 			} );
 		} );
+		$composer.data( 'cp-send', $btn );
 
 		$input.on( 'input', function () {
 			var len = $( this ).val().length;
@@ -108,20 +124,50 @@
 
 		$composer.append(
 			$input,
-			$( '<div>' ).addClass( 'collabpatrol-m-chat-composer-row' ).append( $counter, $btn )
+			$( '<div>' ).addClass( 'collabpatrol-m-chat-composer-row' ).append( $counter, $btn ),
+			$error
 		);
 		return $composer;
+	}
+
+	function showError( $el, msg ) {
+		$el.text( msg ).show();
 	}
 
 	function loadMessages( revId ) {
 		CP.api.chatGet( revId ).then( function ( data ) {
 			isMod = !!data.isMod;
+			isChatBanned = !!data.isBanned;
+			bannedUsers = data.bannedUsers || {};
 			var messages = data.messages || [];
+			updateComposerState();
 			updateCount( messages );
 			if ( isOpen ) {
 				renderMessages( revId, messages );
 			}
 		} );
+	}
+
+	function updateComposerState() {
+		if ( !$chatPanel ) {
+			return;
+		}
+		var $composer = $chatPanel.find( '.collabpatrol-m-chat-composer' );
+		var $input = $composer.data( 'cp-input' );
+		var $btn = $composer.data( 'cp-send' );
+		var $error = $composer.data( 'cp-error' );
+		if ( !$input || !$btn || !$error ) {
+			return;
+		}
+		if ( isChatBanned ) {
+			$input.prop( 'disabled', true );
+			$btn.prop( 'disabled', true );
+			showError( $error, mw.msg( 'collabpatrol-chat-user-banned' ) );
+		} else {
+			$input.prop( 'disabled', false );
+			$btn.prop( 'disabled', false );
+			$error.hide();
+		}
 	}
 
 	function renderMessages( revId, messages ) {
@@ -182,6 +228,36 @@
 				} );
 			$row.append( $del );
 		}
+		if ( isMod && msg.userText !== CP.userName ) {
+			var isUserBanned = !!bannedUsers[ msg.userText ];
+			var $ban = $( '<button>' )
+				.addClass( 'collabpatrol-m-chat-btn-delete collabpatrol-m-chat-btn-ban' )
+				.attr( 'title', isUserBanned ? mw.msg( 'collabpatrol-chat-btn-unban' ) : mw.msg( 'collabpatrol-chat-btn-ban' ) )
+				.text( isUserBanned ? '↺' : '!' )
+				.on( 'click', function () {
+					var confirmed;
+					if ( isUserBanned ) {
+						confirmed = window.confirm( mw.msg( 'collabpatrol-chat-confirm-unban', msg.userText ) );
+						if ( !confirmed ) {
+							return;
+						}
+						CP.api.chatUnban( msg.userText ).then( function () {
+							mw.notify( mw.msg( 'collabpatrol-chat-unban-success', msg.userText ) );
+							loadMessages( revId );
+						} );
+						return;
+					}
+					confirmed = window.confirm( mw.msg( 'collabpatrol-chat-confirm-ban', msg.userText ) );
+					if ( !confirmed ) {
+						return;
+					}
+					CP.api.chatBan( msg.userText, '' ).then( function () {
+						mw.notify( mw.msg( 'collabpatrol-chat-ban-success', msg.userText ) );
+						loadMessages( revId );
+					} );
+				} );
+			$row.append( $ban );
+		}
 
 		return $row;
 	}
@@ -197,6 +273,9 @@
 
 	function startRefresh( revId ) {
 		stopRefresh();
+		if ( CP.config.refreshInterval <= 0 ) {
+			return;
+		}
 		refreshTimer = setInterval( function () {
 			if ( isOpen ) {
 				loadMessages( revId );
@@ -229,6 +308,9 @@
 			}
 
 			var container = $( '<div>' ).addClass( 'collabpatrol-m-container' );
+			if ( CP.config.compactMode ) {
+				container.addClass( 'collabpatrol-m-container-compact' );
+			}
 			var row = $( '<div>' ).addClass( 'collabpatrol-m-row' );
 
 			if ( !entry ) {
@@ -271,7 +353,9 @@
 				} else if ( entry.status === 'in_progress' ) {
 					row.append( createBtn( mw.msg( 'collabpatrol-btn-finish' ), 'green', function () {
 						CP.api.setStatus( revId, 'finished', entry.comment ).then( function () {
-							mw.notify( mw.msg( 'collabpatrol-notify-patrolled' ) );
+							if ( CP.config.notifyFinished ) {
+								mw.notify( mw.msg( 'collabpatrol-notify-patrolled' ) );
+							}
 							renderInterface();
 						} );
 					} ) );
@@ -288,7 +372,7 @@
 
 				container.append( row );
 
-				if ( entry.history && entry.history.length > 1 ) {
+				if ( CP.config.showHistory && entry.history && entry.history.length > 1 ) {
 					var histDiv = $( '<div>' ).addClass( 'collabpatrol-m-history' );
 					entry.history.forEach( function ( h ) {
 						var hElapsed = CP.now() - h.timestamp * 1000;

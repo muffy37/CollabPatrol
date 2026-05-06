@@ -122,6 +122,9 @@
 		}
 
 		var wrapper = $( '<div>' ).addClass( 'collabpatrol-wrapper' );
+		if ( CP.config.compactMode ) {
+			wrapper.addClass( 'collabpatrol-wrapper-compact' );
+		}
 
 		if ( !entry ) {
 			if ( CP.isUnpatrolled() ) {
@@ -152,7 +155,9 @@
 			} else if ( entry.status === 'in_progress' ) {
 				wrapper.append( createBtn( mw.msg( 'collabpatrol-btn-finish' ), 'green', function () {
 					CP.api.setStatus( revId, 'finished', entry.comment ).then( function () {
-						mw.notify( mw.msg( 'collabpatrol-notify-patrolled' ) );
+						if ( CP.config.notifyFinished ) {
+							mw.notify( mw.msg( 'collabpatrol-notify-patrolled' ) );
+						}
 						renderInterface();
 					} );
 				} ) );
@@ -179,7 +184,7 @@
 				} ) );
 			}
 
-			if ( entry.history && entry.history.length > 1 ) {
+			if ( CP.config.showHistory && entry.history && entry.history.length > 1 ) {
 				wrapper.append( buildHistoryBlock( entry.history ) );
 			}
 

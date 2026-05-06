@@ -21,7 +21,7 @@ The idea is simple: instead of patrolling alone, patrollers can flag a revision 
    ```bash
    php maintenance/run.php update
    ```
-4. Done — navigate to `Special:Version` to confirm the extension is loaded.
+4. Navigate to `Special:Version` to confirm the extension is loaded.
 
 ## Permissions
 
@@ -54,10 +54,22 @@ All settings go in `LocalSettings.php`.
 
 Example:
 ```php
-$wgCollabPatrolUrgencyThreshold = 1800; // flag as urgent after 30 minutes
+$wgCollabPatrolUrgencyThreshold = 1800;
 $wgCollabPatrolChatBannedWords = [ 'spam', 'badword' ];
 $wgCollabPatrolChatModerators = [ 'Alice', 'Bob' ];
 ```
+
+## User preferences
+
+Each user can configure CollabPatrol in `Special:Preferences`, under Appearance > Collaborative patrol.
+
+| Preference | Default | Description |
+|---|---|---|
+| Auto-refresh interval | 30 seconds | Refresh interval for RC markers, dashboard and chat |
+| Show notification after finishing an entry | Enabled | Show a completion notification when an entry is marked finished |
+| Open discussion panel by default | Disabled | Open chat automatically on active entries |
+| Show history block on entries | Enabled | Display or hide entry history in diff interfaces |
+| Use compact layout for controls | Disabled | Reduce spacing in desktop and mobile controls |
 
 ## How it works
 

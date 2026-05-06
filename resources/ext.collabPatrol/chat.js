@@ -15,6 +15,8 @@
 	var MAX_LEN = mw.config.get( 'wgCollabPatrolChatMaxLength' ) || 500;
 	var currentRevId = null;
 	var isMod = false;
+	var isChatBanned = false;
+	var bannedUsers = {};
 	var refreshTimer = null;
 	var $chatPanel = null;
 	var isOpen = false;
@@ -80,19 +82,29 @@
 			}
 		}
 		$chatPanel.show();
+		setOpenState( CP.config.chatOpenDefault );
+		if ( CP.config.chatOpenDefault ) {
+			loadMessages();
+		}
 	}
 
-	function togglePanel() {
-		isOpen = !isOpen;
+	function setOpenState( open ) {
+		isOpen = !!open;
 		var $body = $chatPanel.find( '.cp-chat-body' );
 		var $toggle = $chatPanel.find( '.cp-chat-toggle' );
 		if ( isOpen ) {
 			$body.show();
 			$toggle.text( mw.msg( 'collabpatrol-chat-toggle-close' ) );
-			loadMessages();
 		} else {
 			$body.hide();
 			$toggle.text( mw.msg( 'collabpatrol-chat-toggle-open' ) );
+		}
+	}
+
+	function togglePanel() {
+		setOpenState( !isOpen );
+		if ( isOpen ) {
+			loadMessages();
 		}
 	}
 
@@ -108,6 +120,9 @@
 			.addClass( 'collabpatrol-btn collabpatrol-btn-green cp-chat-send' )
 			.text( mw.msg( 'collabpatrol-chat-btn-send' ) );
 		var $error = $( '<div>' ).addClass( 'cp-chat-error' ).hide();
+		$composer.data( 'cp-input', $input );
+		$composer.data( 'cp-send', $btn );
+		$composer.data( 'cp-error', $error );
 
 		$input.on( 'input', function () {
 			var len = $( this ).val().length;
@@ -147,6 +162,8 @@
 					errMsg = mw.msg( 'collabpatrol-chat-banned-word' );
 				} else if ( data && data.error && data.error.code === 'message_too_long' ) {
 					errMsg = mw.msg( 'collabpatrol-chat-too-long' );
+				} else if ( data && data.error && data.error.code === 'chat_user_banned' ) {
+					errMsg = mw.msg( 'collabpatrol-chat-user-banned' );
 				}
 				showError( $error, errMsg );
 			} ).always( function () {
@@ -178,10 +195,32 @@
 		}
 		CP.api.chatGet( currentRevId ).then( function ( data ) {
 			isMod = !!data.isMod;
+			isChatBanned = !!data.isBanned;
+			bannedUsers = data.bannedUsers || {};
 			var messages = data.messages || [];
+			updateComposerState();
 			renderMessages( messages );
 			updateCount( messages );
 		} );
+	}
+
+	function updateComposerState() {
+		var $composer = $chatPanel.find( '.cp-chat-composer' );
+		var $input = $composer.data( 'cp-input' );
+		var $btn = $composer.data( 'cp-send' );
+		var $error = $composer.data( 'cp-error' );
+		if ( !$input || !$btn || !$error ) {
+			return;
+		}
+		if ( isChatBanned ) {
+			$input.prop( 'disabled', true );
+			$btn.prop( 'disabled', true );
+			showError( $error, mw.msg( 'collabpatrol-chat-user-banned' ) );
+		} else {
+			$input.prop( 'disabled', false );
+			$btn.prop( 'disabled', false );
+			$error.hide();
+		}
 	}
 
 	function renderMessages( messages ) {
@@ -240,6 +279,36 @@
 				} );
 			$row.append( $del );
 		}
+		if ( isMod && msg.userText !== CP.userName ) {
+			var isUserBanned = !!bannedUsers[ msg.userText ];
+			var $ban = $( '<button>' )
+				.addClass( 'cp-chat-btn-delete cp-chat-btn-ban' )
+				.attr( 'title', isUserBanned ? mw.msg( 'collabpatrol-chat-btn-unban' ) : mw.msg( 'collabpatrol-chat-btn-ban' ) )
+				.text( isUserBanned ? '↺' : '!' )
+				.on( 'click', function () {
+					var confirmed;
+					if ( isUserBanned ) {
+						confirmed = window.confirm( mw.msg( 'collabpatrol-chat-confirm-unban', msg.userText ) );
+						if ( !confirmed ) {
+							return;
+						}
+						CP.api.chatUnban( msg.userText ).then( function () {
+							mw.notify( mw.msg( 'collabpatrol-chat-unban-success', msg.userText ) );
+							loadMessages();
+						} );
+						return;
+					}
+					confirmed = window.confirm( mw.msg( 'collabpatrol-chat-confirm-ban', msg.userText ) );
+					if ( !confirmed ) {
+						return;
+					}
+					CP.api.chatBan( msg.userText, '' ).then( function () {
+						mw.notify( mw.msg( 'collabpatrol-chat-ban-success', msg.userText ) );
+						loadMessages();
+					} );
+				} );
+			$row.append( $ban );
+		}
 
 		return $row;
 	}
@@ -256,6 +325,9 @@
 
 	function startRefresh() {
 		stopRefresh();
+		if ( CP.config.refreshInterval <= 0 ) {
+			return;
+		}
 		refreshTimer = setInterval( function () {
 			if ( isOpen ) {
 				loadMessages();

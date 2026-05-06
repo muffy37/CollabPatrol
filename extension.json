@@ -53,9 +53,17 @@
 		"LoadExtensionSchemaUpdates": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\SchemaHooks::onLoadExtensionSchemaUpdates",
 		"ChangesListInsertArticleLink": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\RCHooks::onChangesListInsertArticleLink",
 		"SpecialPageAliases": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\AliasHooks::onSpecialPageAliases",
+		"GetPreferences": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\PreferencesHooks::onGetPreferences",
 		"BeforePageDisplay": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\PageHooks::onBeforePageDisplay",
 		"DifferenceEngineViewHeader": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\PageHooks::onDifferenceEngineViewHeader",
 		"SkinTemplateNavigation::Universal": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\SkinHooks::onSkinTemplateNavigationUniversal"
+	},
+	"DefaultUserOptions": {
+		"collabpatrol-refresh-interval": 30,
+		"collabpatrol-notify-finished": 1,
+		"collabpatrol-chat-open-default": 0,
+		"collabpatrol-show-history": 1,
+		"collabpatrol-compact-mode": 0
 	},
 	"MessagesDirs": {
 		"CollabPatrol": [
@@ -133,7 +141,14 @@
 				"collabpatrol-chat-too-long",
 				"collabpatrol-chat-banned-word",
 				"collabpatrol-chat-send-error",
+				"collabpatrol-chat-user-banned",
 				"collabpatrol-chat-confirm-delete",
+				"collabpatrol-chat-btn-ban",
+				"collabpatrol-chat-btn-unban",
+				"collabpatrol-chat-confirm-ban",
+				"collabpatrol-chat-confirm-unban",
+				"collabpatrol-chat-ban-success",
+				"collabpatrol-chat-unban-success",
 				"collabpatrol-chat-toggle-open",
 				"collabpatrol-chat-toggle-close",
 				"collabpatrol-chat-count"
@@ -173,7 +188,14 @@
 				"collabpatrol-chat-empty",
 				"collabpatrol-chat-too-long",
 				"collabpatrol-chat-send-error",
+				"collabpatrol-chat-user-banned",
 				"collabpatrol-chat-confirm-delete",
+				"collabpatrol-chat-btn-ban",
+				"collabpatrol-chat-btn-unban",
+				"collabpatrol-chat-confirm-ban",
+				"collabpatrol-chat-confirm-unban",
+				"collabpatrol-chat-ban-success",
+				"collabpatrol-chat-unban-success",
 				"collabpatrol-chat-toggle-open",
 				"collabpatrol-chat-toggle-close",
 				"collabpatrol-chat-count"

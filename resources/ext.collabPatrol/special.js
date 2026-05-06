@@ -163,6 +163,8 @@
 	}
 
 	loadAndRender();
-	setInterval( loadAndRender, CP.config.refreshInterval );
+	if ( CP.config.refreshInterval > 0 ) {
+		setInterval( loadAndRender, CP.config.refreshInterval );
+	}
 
 }() );

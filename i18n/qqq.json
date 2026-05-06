@@ -3,6 +3,12 @@
 		"authors": []
 	},
 	"collabpatrol-desc": "Short description of the extension shown on Special:Version.",
+	"right-collabpatrol-use": "Permission label shown in user rights pages.",
+	"rightdesc-collabpatrol-use": "Description of the permission to use collaborative patrol actions.",
+	"right-collabpatrol-admin": "Permission label shown in user rights pages.",
+	"rightdesc-collabpatrol-admin": "Description of the permission to administer collaborative patrol.",
+	"right-collabpatrol-chatmod": "Permission label shown in user rights pages.",
+	"rightdesc-collabpatrol-chatmod": "Description of the permission to moderate collaborative patrol chat.",
 	"collabpatrol-dashboard-title": "Title of the Special:CollabPatrol dashboard page.",
 	"collabpatrol-status-pending": "Label for the 'pending' patrol status.",
 	"collabpatrol-status-in-progress": "Label for the 'in progress' patrol status.",

@@ -14,7 +14,8 @@
 	},
 	"AvailableRights": [
 		"collabpatrol-use",
-		"collabpatrol-admin"
+		"collabpatrol-admin",
+		"collabpatrol-chatmod"
 	],
 	"GroupPermissions": {
 		"patroller": {
@@ -22,7 +23,8 @@
 		},
 		"sysop": {
 			"collabpatrol-use": true,
-			"collabpatrol-admin": true
+			"collabpatrol-admin": true,
+			"collabpatrol-chatmod": true
 		}
 	},
 	"SpecialPages": {

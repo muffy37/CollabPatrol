@@ -29,11 +29,13 @@ The idea is simple: instead of patrolling alone, patrollers can flag a revision 
 |---|---|---|
 | `collabpatrol-use` | `patroller`, `sysop` | Flag, take and finish patrol entries |
 | `collabpatrol-admin` | `sysop` | Manage entries and moderate the chat |
+| `collabpatrol-chatmod` | `sysop` | Moderate chat and manage chat bans without full patrol admin |
 
 You can override these in `LocalSettings.php`:
 ```php
 $wgGroupPermissions['patroller']['collabpatrol-use'] = true;
 $wgGroupPermissions['sysop']['collabpatrol-admin'] = true;
+$wgGroupPermissions['sysop']['collabpatrol-chatmod'] = true;
 ```
 
 ## Configuration
@@ -48,7 +50,7 @@ All settings go in `LocalSettings.php`.
 | `$wgCollabPatrolEnableEcho` | `true` | Send Echo notifications when patrol status changes |
 | `$wgCollabPatrolChatEnabled` | `true` | Enable the per-diff discussion panel |
 | `$wgCollabPatrolChatMaxLength` | `500` | Maximum character length for a chat message |
-| `$wgCollabPatrolChatModerators` | `[]` | Additional usernames allowed to delete chat messages |
+| `$wgCollabPatrolChatModerators` | `[]` | Optional additional usernames allowed to moderate chat |
 | `$wgCollabPatrolChatBannedWords` | `[]` | Words forbidden in chat messages (case-insensitive) |
 | `$wgCollabPatrolChatAutoDelete` | `true` | Delete chat messages when the entry is finished or removed |
 
@@ -56,7 +58,7 @@ Example:
 ```php
 $wgCollabPatrolUrgencyThreshold = 1800;
 $wgCollabPatrolChatBannedWords = [ 'spam', 'badword' ];
-$wgCollabPatrolChatModerators = [ 'Alice', 'Bob' ];
+$wgGroupPermissions['patroller']['collabpatrol-chatmod'] = true;
 ```
 
 ## User preferences

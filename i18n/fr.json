@@ -6,6 +6,12 @@
 		]
 	},
 	"collabpatrol-desc": "Patrouille collaborative avec tableau de bord centralisé et discussion par diff",
+	"right-collabpatrol-use": "Utiliser la patrouille collaborative",
+	"rightdesc-collabpatrol-use": "Permet de signaler, prendre en charge et terminer des entrées de patrouille collaborative.",
+	"right-collabpatrol-admin": "Administrer la patrouille collaborative",
+	"rightdesc-collabpatrol-admin": "Permet de gérer les entrées de patrouille et d'administrer les réglages de la patrouille collaborative.",
+	"right-collabpatrol-chatmod": "Modérer le chat de patrouille collaborative",
+	"rightdesc-collabpatrol-chatmod": "Permet de modérer les messages du chat et de gérer les bannissements du chat.",
 	"collabpatrol-dashboard-title": "Tableau de bord — Patrouille collaborative",
 	"collabpatrol-status-pending": "En attente",
 	"collabpatrol-status-in-progress": "En cours",

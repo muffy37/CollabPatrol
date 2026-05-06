@@ -5,6 +5,12 @@
 		]
 	},
 	"collabpatrol-desc": "Pattugliamento collaborativo con dashboard centralizzata e discussione per diff",
+	"right-collabpatrol-use": "Usare il pattugliamento collaborativo",
+	"rightdesc-collabpatrol-use": "Consente di segnalare, prendere in carico e completare voci di pattugliamento collaborativo.",
+	"right-collabpatrol-admin": "Amministrare il pattugliamento collaborativo",
+	"rightdesc-collabpatrol-admin": "Consente di gestire le voci di pattugliamento e amministrare le impostazioni del pattugliamento collaborativo.",
+	"right-collabpatrol-chatmod": "Moderare la chat del pattugliamento collaborativo",
+	"rightdesc-collabpatrol-chatmod": "Consente di moderare i messaggi della chat e gestire i ban della chat.",
 	"collabpatrol-dashboard-title": "Dashboard - Pattugliamento collaborativo",
 	"collabpatrol-status-pending": "In attesa",
 	"collabpatrol-status-in-progress": "In corso",

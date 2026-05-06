@@ -304,6 +304,9 @@ class ApiCollabPatrol extends ApiBase {
 		if ( $user->isAllowed( 'collabpatrol-admin' ) ) {
 			return true;
 		}
+		if ( $user->isAllowed( 'collabpatrol-chatmod' ) ) {
+			return true;
+		}
 		$moderators = $this->getConfig()->get( 'CollabPatrolChatModerators' );
 		if ( is_array( $moderators ) && in_array( $user->getName(), $moderators, true ) ) {
 			return true;

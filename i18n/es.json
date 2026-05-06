@@ -5,6 +5,12 @@
 		]
 	},
 	"collabpatrol-desc": "Patrullaje colaborativo con panel centralizado y discusión por diff",
+	"right-collabpatrol-use": "Usar patrullaje colaborativo",
+	"rightdesc-collabpatrol-use": "Permite marcar, tomar y finalizar entradas de patrullaje colaborativo.",
+	"right-collabpatrol-admin": "Administrar patrullaje colaborativo",
+	"rightdesc-collabpatrol-admin": "Permite gestionar entradas de patrullaje y administrar la configuración de patrullaje colaborativo.",
+	"right-collabpatrol-chatmod": "Moderar el chat de patrullaje colaborativo",
+	"rightdesc-collabpatrol-chatmod": "Permite moderar mensajes del chat y gestionar bloqueos del chat.",
 	"collabpatrol-dashboard-title": "Panel de control - Patrullaje colaborativo",
 	"collabpatrol-status-pending": "Pendiente",
 	"collabpatrol-status-in-progress": "En curso",

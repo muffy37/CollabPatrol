@@ -6,6 +6,12 @@
 		]
 	},
 	"collabpatrol-desc": "Collaborative patrol with centralized dashboard and per-diff discussion",
+	"right-collabpatrol-use": "Use collaborative patrol",
+	"rightdesc-collabpatrol-use": "Allows users to flag, take and finish collaborative patrol entries.",
+	"right-collabpatrol-admin": "Administer collaborative patrol",
+	"rightdesc-collabpatrol-admin": "Allows users to manage patrol entries and administer collaborative patrol settings.",
+	"right-collabpatrol-chatmod": "Moderate collaborative patrol chat",
+	"rightdesc-collabpatrol-chatmod": "Allows users to moderate chat messages and manage chat bans.",
 	"collabpatrol-dashboard-title": "Dashboard — Collaborative Patrol",
 	"collabpatrol-status-pending": "Pending",
 	"collabpatrol-status-in-progress": "In progress",

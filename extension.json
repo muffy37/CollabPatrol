@@ -54,7 +54,6 @@
 	"Hooks": {
 		"LoadExtensionSchemaUpdates": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\SchemaHooks::onLoadExtensionSchemaUpdates",
 		"ChangesListInsertArticleLink": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\RCHooks::onChangesListInsertArticleLink",
-		"SpecialPageAliases": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\AliasHooks::onSpecialPageAliases",
 		"GetPreferences": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\PreferencesHooks::onGetPreferences",
 		"BeforePageDisplay": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\PageHooks::onBeforePageDisplay",
 		"DifferenceEngineViewHeader": "MediaWiki\\Extension\\CollabPatrol\\Hooks\\PageHooks::onDifferenceEngineViewHeader",

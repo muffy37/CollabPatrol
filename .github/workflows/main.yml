@@ -1,0 +1,67 @@
+name: CI MediaWiki
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  quality:
+    name: Qualité & Analyse statique
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout extension
+        uses: actions/checkout@v4
+
+      - name: Configuration de PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, xml, dom
+          tools: composer
+
+      - name: Installation des dépendances Composer
+        run: composer install --prefer-dist --no-progress
+
+      - name: Exécution des linters PHP / Phan
+        run: composer test
+
+  phpunit:
+    name: PHPUnit (MW ${{ matrix.mediawiki-version }} / PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mediawiki-version: 'REL1_39'
+            php-version: '8.1'
+          - mediawiki-version: 'REL1_42'
+            php-version: '8.2'
+          - mediawiki-version: 'master'
+            php-version: '8.3'
+
+    steps:
+      - name: Checkout du noyau MediaWiki
+        uses: actions/checkout@v4
+        with:
+          repository: wikimedia/mediawiki
+          ref: ${{ matrix.mediawiki-version }}
+
+      - name: Checkout de CollabPatrol
+        uses: actions/checkout@v4
+        with:
+          path: extensions/CollabPatrol
+
+      - name: Configuration de PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, xml, dom, sqlite3
+          tools: composer
+
+      - name: Installation des dépendances MediaWiki
+        run: composer update --prefer-dist --no-progress
+
+      - name: Exécution de PHPUnit
+        run: php tests/phpunit/phpunit.php --extension CollabPatrol
